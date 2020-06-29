@@ -1388,6 +1388,7 @@ public:
     bool RequestJoinGame(PlayerSetup setup, const InterfaceSettings& settings, const Ports& ports = Ports()) override;
     bool WaitJoinGame() override;
 
+    bool RequestQuit() override;
     bool RequestLeaveGame() override;
     bool PollLeaveGame() override;
 
@@ -1699,6 +1700,16 @@ bool ControlImp::RequestJoinGame(PlayerSetup setup, const InterfaceSettings& set
         minimap_resolution->set_y(settings.render_settings.minimap_y);
     }
 
+    if (!proto_.SendRequest(request)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool ControlImp::RequestQuit() {
+    GameRequestPtr request = proto_.MakeRequest();
+    request->mutable_quit();
     if (!proto_.SendRequest(request)) {
         return false;
     }

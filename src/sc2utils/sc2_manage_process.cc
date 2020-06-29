@@ -160,15 +160,16 @@ BOOL WINAPI ConsoleHandlerRoutine(DWORD /*dwCtrlType*/) {
 }
 
 uint64_t StartProcess(const std::string& process_path, const std::vector<std::string>& command_line) {
-    static const unsigned int buffer_size = (1 << 16) + 1;
+    static const unsigned int path_buffer_size = (1 << 9) + 1;
+    static const unsigned int cmd_buffer_size = (1 << 10);
 
     WindowsProcess process;
     std::memset(&process, 0, sizeof(process));
     process.si_.cb = sizeof(process.si_);
 
-    char current_directory[buffer_size];
-    char support_directory[buffer_size];
-    GetCurrentDirectory(buffer_size, current_directory);
+    char current_directory[path_buffer_size];
+    char support_directory[path_buffer_size];
+    GetCurrentDirectory(path_buffer_size, current_directory);
     strcpy_s(support_directory, process_path.c_str());
     int slashcount = 0;
     for (size_t i = strlen(support_directory); i > 0 && slashcount < 3; --i) {
@@ -190,8 +191,8 @@ uint64_t StartProcess(const std::string& process_path, const std::vector<std::st
 
     SetCurrentDirectory(support_directory);
 
-    char buffer[buffer_size];
-    std::memset(buffer, 0, buffer_size);
+    char buffer[cmd_buffer_size];
+    std::memset(buffer, 0, cmd_buffer_size);
     for (int i = 0; i < command_line.size(); ++i) {
         strcat_s(buffer, " ");
         strcat_s(buffer, command_line[i].c_str());

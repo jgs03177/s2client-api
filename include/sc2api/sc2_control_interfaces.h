@@ -25,6 +25,7 @@ public:
     virtual bool RequestJoinGame(PlayerSetup setup, const InterfaceSettings& settings, const Ports& ports = Ports()) = 0;
     virtual bool WaitJoinGame() = 0;
 
+    virtual bool RequestQuit() = 0;
     virtual bool RequestLeaveGame() = 0;
     virtual bool PollLeaveGame() = 0;
 
